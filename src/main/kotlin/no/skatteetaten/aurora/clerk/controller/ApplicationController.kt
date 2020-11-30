@@ -37,6 +37,7 @@ class ApplicationController(
             logger.info("Scaling dc=${command.name} to replicas=${command.replicas} in namespace=$namespace")
             return ClerkResponse(items = listOf(scaleResult), message = "Scaled applications in namespace=$namespace")
         } catch (e: WebClientResponseException) {
+            logger.error(e) { "Exception in scale, namespace=$namespace scaleCommand=$command status=${e.statusCode} body=${e.responseBodyAsString}" }
             throw RuntimeException(
                 "Could not scale dc with name=${command.name} in namespace=$namespace causeStatusCode=${e.statusCode} causeMessage=${e.message}",
                 e
